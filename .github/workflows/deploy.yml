@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Create SSH key
       run: |
-        echo "$TF_VAR_deploy_key" > ~/.ssh/id_rsa.pub
+        echo "$TF_VAR_deploy_key" > ~/.ssh/id_rsa
         ssh-keyscan github.com >> /home/ec2-user/.ssh/known_hosts
       shell: bash  
 
