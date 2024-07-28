@@ -37,11 +37,24 @@ jobs:
     - name: Wait for EC2 Instance to be ready
       run: |
         echo "Waiting for EC2 instance to be ready..."
-        sleep 360
+        sleep 60
     
-    - name: Create SSH key
+    - name: Extract EC2 Instance Public IP
+      id: extract_ip
       run: |
-        echo "$TF_VAR_deploy_key" > /home/ec2-user/.ssh/id_rsa && chmod 600 /home/ec2-user/.ssh/id_rsa
-      shell: bash 
+          instance_ip=$(terraform output -raw ec2_instance_public_ip)
+          echo "::set-output name=INSTANCE_IP::$instance_ip"
+  
+    - name: Install SSH client
+      run: sudo apt-get install -y openssh-client
+  
+    - name: Copy SSH Key to EC2
       env:
-        TF_VAR_deploy_key: ${{ secrets.DEPLOY_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          TF_VAR_deploy_key: ${{ secrets.DEPLOY_KEY }}
+      run: |
+          echo "$DEPLOY_KEY" > ssh_private_key
+          chmod 600 ssh_private_key
+          scp -o StrictHostKeyChecking=no -i ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }}:/home/ec2-user/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no -i ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }} "chmod 600 /home/ec2-user/.ssh/id_rsa"
+        
