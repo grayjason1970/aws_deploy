@@ -12,7 +12,10 @@ jobs:
     steps:
     - name: Create SSH key
       run: |
+        mkdir -p /home/ec2-user/.ssh
+        chmod 600 /home/ec2-user/.ssh
         echo "$TF_VAR_deploy_key" > /home/ec2-user/.ssh/id_rsa
+        chmod 600 /home/ec2-user/.ssh/id_rsa
         ssh-keyscan github.com >> /home/ec2-user/.ssh/known_hosts
       shell: bash  
 
