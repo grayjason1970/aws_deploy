@@ -27,3 +27,16 @@ variable "vpc_id" {
   type        = string
   default     = "data.aws_vpc.project1.id"
 }
+
+variable "subnet_id" {
+  description = "The ID of the subnet"
+  type        = string
+  default     = "data.aws_subnet.servers.id"
+}
+
+variable "aws_security_group" {
+  description = "The security group ID"
+  type        = string
+  default     = "data.aws_security_group.Project1.id"
+}
+  
