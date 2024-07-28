@@ -13,11 +13,11 @@ variable "instance_type" {
 variable "key_name" {
   description = "The name of the EC2 Key Pair"
   type        = string
-  default     = "your-key-pair-name"
+  default     = "projectone"
 }
 
 variable "ami_id" {
   description = "The AMI ID for the EC2 instance"
   type        = string
-  default     = "ami-0c55b159cbfafe1f0"
+  default     = "ami-0648742c7600c103f"
 }
