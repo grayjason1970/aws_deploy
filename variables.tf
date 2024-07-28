@@ -34,7 +34,7 @@ variable "subnet_id" {
   default     = "subnet-03d934629af7d951e"
 }
 
-variable "aws_security_group_id" {
+variable "avpc_security_group_ids" {
   description = "The security group ID"
   type        = string
   default     = "sg-025f828e00022b542"
