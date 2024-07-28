@@ -2,10 +2,6 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "aws_security_group" "flask_sg" {
-  name_prefix = "flask_sg_"
-  vpc_id      = var.vpc_id
-
   ingress {
     from_port   = 22
     to_port     = 22
