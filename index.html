@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Deployment Configurations</title>
+</head>
+<body>
+    <h1>Deployment Configurations</h1>
+    <a href="{{ url_for('create') }}">Create New Configuration</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Instance Type</th>
+            <th>Memory Size</th>
+            <th>Disk Size</th>
+            <th>Availability Zone</th>
+            <th>Number of Instances</th>
+            <th>Use Spot Instances</th>
+            <th>Actions</th>
+        </tr>
+        {% for config in configs %}
+        <tr>
+            <td>{{ config.id }}</td>
+            <td>{{ config.image_id }}</td>
+            <td>{{ config.instance_type_id }}</td>
+            <td>{{ config.memory_size_id }}</td>
+            <td>{{ config.disk_size_id }}</td>
+            <td>{{ config.availability_zone_id }}</td>
+            <td>{{ config.number_of_instances }}</td>
+            <td>{{ config.use_spot_instances }}</td>
+            <td>
+                <form action="{{ url_for('deploy', config_id=config.id) }}" method="post">
+                    <button type="submit">Deploy</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
