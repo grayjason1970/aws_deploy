@@ -7,7 +7,21 @@ resource "aws_instance" "flask_app" {
   instance_type = var.instance_type
   key_name      = var.key_name
 
-  user_data = file("setup.sh")
+  user_data = <<-EOF
+              #!/bin/bash
+              # Install SSM Agent if not already installed
+              if ! rpm -q amazon-ssm-agent; then
+                yum install -y amazon-ssm-agent
+              fi
+              systemctl start amazon-ssm-agent
+              systemctl enable amazon-ssm-agent
+
+              # Wait for SSM Agent to be ready
+              sleep 30
+
+               # Execute setup.sh last
+               ${file("$setup.sh")} 
+              EOF
 
   tags = {
     Name = "FlaskApp"

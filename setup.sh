@@ -1,8 +1,5 @@
 #!/bin/bash
 sudo yum update -y
-sudo yum install -y amazon-ssm-agent
-sudo systemctl enable amazon-ssm-agent
-sudo systemctl start amazon-ssm-agent
 sudo yum install -y gcc
 sudo yum install -y python3
 sudo yum install -y python3-devel

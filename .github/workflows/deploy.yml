@@ -46,7 +46,13 @@ jobs:
           echo "::set-output name=INSTANCE_IP::$instance_ip"
   
     - name: Install SSH client
-      run: sudo apt-get install -y openssh-client
+      run: sudo apt-get install -y openssh-client 
+
+    - name: Install SSM Agent
+      run: | 
+           sudo apt-get install -y amazon-ssm-agent
+           sudo systemctl start amazon-ssm-agent
+           sudo systemctl enable amazon-ssm-agent
   
     - name: Extract EC2 Instance ID
       id: extract_id
