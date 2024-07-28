@@ -1,0 +1,9 @@
+version: '3'
+services:
+  flask_app:
+    image: python:3.8-slim
+    command: bash -c "pip install -r requirements.txt && python app.py"
+    volumes:
+      - .:/app
+    ports:
+      - "80:5000"
