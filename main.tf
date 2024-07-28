@@ -2,12 +2,12 @@ provider "aws" {
   region = "us-west-2"
 }
 
-variable "vpc_id" {}
-variable "subnet_id" {}
-variable "security_group_id" {}
-variable "key_name" {}
-variable "instance_type" { default = "t2.micro" }
-variable "ami_id" { default = "ami-0c55b159cbfafe1f0" }  # Amazon Linux 2 AMI
+#variable "vpc_id" {}
+#variable "subnet_id" {}
+#variable "security_group_id" {}
+#variable "key_name" {}
+#variable "instance_type" { default = "t2.micro" }
+#variable "ami_id" { default = "ami-0c55b159cbfafe1f0" }  # Amazon Linux 2 AMI
 
 resource "aws_instance" "flask_app" {
   ami           = var.ami_id
