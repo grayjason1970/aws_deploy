@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Configuration</title>
+</head>
+<body>
+    <h1>Create Configuration</h1>
+    <form action="{{ url_for('create') }}" method="post">
+        <label for="image_id">Image:</label>
+        <select name="image_id" id="image_id">
+            {% for image in images %}
+            <option value="{{ image.id }}">{{ image.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="instance_type_id">Instance Type:</label>
+        <select name="instance_type_id" id="instance_type_id">
+            {% for instance_type in instance_types %}
+            <option value="{{ instance_type.id }}">{{ instance_type.type }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="memory_size_id">Memory Size:</label>
+        <select name="memory_size_id" id="memory_size_id">
+            {% for memory_size in memory_sizes %}
+            <option value="{{ memory_size.id }}">{{ memory_size.size }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="disk_size_id">Disk Size:</label>
+        <select name="disk_size_id" id="disk_size_id">
+            {% for disk_size in disk_sizes %}
+            <option value="{{ disk_size.id }}">{{ disk_size.size }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="availability_zone_id">Availability Zone:</label>
+        <select name="availability_zone_id" id="availability_zone_id">
+            {% for availability_zone in availability_zones %}
+            <option value="{{ availability_zone.id }}">{{ availability_zone.zone }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="number_of_instances">Number of Instances:</label>
+        <input type="number" name="number_of_instances" id="number_of_instances"><br>
+
+        <label for="use_spot_instances">Use Spot Instances:</label>
+        <input type="checkbox" name="use_spot_instances" id="use_spot_instances"><br>
+
+        <button type="submit">Create</button>
+    </form>
+</body>
+</html>
