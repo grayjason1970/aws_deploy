@@ -34,7 +34,7 @@ variable "subnet_id" {
   default     = "subnet-03d934629af7d951e"
 }
 
-variable "vpc_security_group_ids" {
+variable "security_group_id" {
   description = "The security group ID"
   type        = string
   default     = "sg-025f828e00022b542"
