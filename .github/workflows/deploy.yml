@@ -32,9 +32,3 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
-      env:
-        TF_VAR_instance_type: ${{ secrets.TF_VAR_INSTANCE_TYPE }}
-        TF_VAR_key_name: ${{ secrets.TF_VAR_KEY_NAME }}
-        TF_VAR_vpc_id: ${{ secrets.TF_VAR_VPC_ID }}
-        TF_VAR_subnet_id: ${{ secrets.TF_VAR_SUBNET_ID }}
-        TF_VAR_security_group_id: ${{ secrets.TF_VAR_SECURITY_GROUP_ID }}
