@@ -34,7 +34,7 @@ variable "subnet_id" {
   default     = "data.aws_subnet.servers.id"
 }
 
-variable "aws_security_group" {
+variable "aws_security_group_id" {
   description = "The security group ID"
   type        = string
   default     = "data.aws_security_group.Project1.id"
