@@ -57,12 +57,12 @@ jobs:
     - name: Generate SSH Key
       env:
         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+        SSH_PUBLIC_KEY: ${{ secrets.DEPLOY_KEY_PUBLIC }}
       run: |
-        echo "$SSH_PRIVATE_KEY"
         echo "$SSH_PRIVATE_KEY" > ssh_private_key
-        cat ssh_private_key
         chmod 600 ssh_private_key
-        ssh-keygen -y -f ssh_private_key > ssh_public_key
+        echo "$SSH_PUBLIC_KEY" > ssh_public_key
+        chmod 600 ssh_public_key
 
     - name: Install AWS CLI
       run: sudo apt-get install -y awscli
