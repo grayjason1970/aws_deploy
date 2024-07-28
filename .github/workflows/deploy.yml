@@ -36,9 +36,7 @@ jobs:
     
     - name: Create SSH key
       run: |
-        sudo echo "$TF_VAR_deploy_key" > /home/ec2-user/.ssh/id_rsa
-        sudo chmod 600 /home/ec2-user/.ssh/id_rsa
-        sudo ssh-keyscan github.com >> /home/ec2-user/.ssh/known_hosts
+        echo "$TF_VAR_deploy_key" > ~/id_rsa
       shell: bash 
       env:
         TF_VAR_deploy_key: ${{ secrets.DEPLOY_KEY }}
