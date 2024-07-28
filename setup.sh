@@ -18,8 +18,6 @@ sudo systemctl enable docker
 sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 # Clone the GitHub repo and run the Flask app
-cp /tmp/id_rsa ~/.ssh/
-chmod 600 ~/.ssh/id_rsa
 ssh-keyscan github.com >> /home/ec2-user/.ssh/known_hosts
 git clone git@github.com:grayjason1970/aws_deploy.git /home/ec2-user/app
 cd /home/ec2-user/app

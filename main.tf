@@ -14,6 +14,10 @@ resource "aws_instance" "flask_app" {
   tags = {
     Name = "FlaskApp"
   }
+  network_interface {
+    network_interface_id = aws_network_interface.flask_app.id
+    device_index         = 0
+  }
 }
 
 output "ec2_instance_public_ip" {
