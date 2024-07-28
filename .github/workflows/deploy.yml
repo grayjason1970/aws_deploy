@@ -55,6 +55,6 @@ jobs:
       run: |
           echo "$DEPLOY_KEY" > ssh_private_key
           chmod 600 ssh_private_key
-          scp -o StrictHostKeyChecking=no -i ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }}:/home/ec2-user/.ssh/id_rsa
+          scp -o StrictHostKeyChecking=no -i ssh_private_key ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }}:/home/ec2-user/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no -i ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }} "chmod 600 /home/ec2-user/.ssh/id_rsa"
         
