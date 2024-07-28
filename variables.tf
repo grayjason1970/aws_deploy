@@ -21,3 +21,9 @@ variable "ami_id" {
   type        = string
   default     = "ami-0648742c7600c103f"
 }
+
+variable "vpc_id" {
+  description = "The VPC ID"
+  type        = string
+  default     = "data.aws_vpc.project1.id"
+}

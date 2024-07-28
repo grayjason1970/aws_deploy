@@ -1,9 +1,25 @@
 provider "aws" {
-  region = var.aws_region
+  region = "us-west-2"
+}
+
+data "aws_vpc" "project1" {
+  filter {
+    name   = "tag:Name"
+    values = ["Project1"]
+  }
+}
+
+data "aws_subnet" "servers" {
+  filter {
+    name   = "tag:Name"
+    values = ["servers"]
+  }
+  vpc_id = var.vpc_id
 }
 
 resource "aws_security_group" "flask_sg" {
   name_prefix = "flask_sg_"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 22
@@ -35,6 +51,7 @@ resource "aws_instance" "flask_app" {
   ami                    = var.ami_id
   instance_type          = var.instance_type
   key_name               = var.key_name
+  subnet_id              = data.aws_subnet.servers.id
   vpc_security_group_ids = [aws_security_group.flask_sg.id]
   user_data              = file("setup.sh")
 
