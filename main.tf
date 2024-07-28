@@ -21,7 +21,7 @@ resource "aws_instance" "flask_app" {
 
 resource "aws_network_interface" "flask_app" {
   subnet_id       = var.subnet_id
-  private_ips     = ["10.10.8.50"]
+  private_ips     = ["10.10.14.183"]
 
   security_groups = [
     var.security_group_id,
