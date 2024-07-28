@@ -25,18 +25,18 @@ variable "ami_id" {
 variable "vpc_id" {
   description = "The VPC ID"
   type        = string
-  default     = "data.aws_vpc.project1.id"
+  default     = "vpc-056766a49ea873983"
 }
 
 variable "subnet_id" {
   description = "The ID of the subnet"
   type        = string
-  default     = "data.aws_subnet.servers.id"
+  default     = "subnet-03d934629af7d951e"
 }
 
 variable "aws_security_group_id" {
   description = "The security group ID"
   type        = string
-  default     = "data.aws_security_group.Project1.id"
+  default     = "sg-025f828e00022b542"
 }
   
