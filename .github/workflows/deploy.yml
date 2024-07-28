@@ -48,13 +48,34 @@ jobs:
     - name: Install SSH client
       run: sudo apt-get install -y openssh-client
   
-    - name: Copy SSH Key to EC2
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          TF_VAR_deploy_key: ${{ secrets.DEPLOY_KEY }}
+    - name: Extract EC2 Instance ID
+      id: extract_id
       run: |
-          echo "$DEPLOY_KEY" > ssh_private_key
-          chmod 600 ssh_private_key
-          scp -o StrictHostKeyChecking=no -i ssh_private_key ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }}:/home/ec2-user/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no -i ssh_private_key ec2-user@${{ steps.extract_ip.outputs.INSTANCE_IP }} "chmod 600 /home/ec2-user/.ssh/id_rsa"
+        instance_id=$(terraform output -raw ec2_instance_id)
+        echo "::set-output name=INSTANCE_ID::$instance_id"
+
+    - name: Generate SSH Key
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > ssh_private_key
+        chmod 600 ssh_private_key
+        ssh-keygen -y -f ssh_private_key > ssh_public_key
+
+    - name: Install AWS CLI
+      run: sudo apt-get install -y awscli
+
+    - name: Send SSH Key to EC2
+      env:
+        INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
+      run: |
+        aws ssm send-command \
+          --document-name "AWS-RunShellScript" \
+          --targets "Key=instanceids,Values=$INSTANCE_ID" \
+          --comment "Send SSH key to EC2 instance" \
+          --parameters 'commands=["mkdir -p /home/ec2-user/.ssh", "echo \"$(<ssh_private_key)\" > /home/ec2-user/.ssh/id_rsa", "echo \"$(<ssh_public_key)\" > /home/ec2-user/.ssh/id_rsa.pub", "chmod 600 /home/ec2-user/.ssh/id_rsa", "chmod 644 /home/ec2-user/.ssh/id_rsa.pub", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa.pub"]' \
+          --timeout-seconds 60 \
+          --max-concurrency "50" \
+          --max-errors "0"
+      
         
