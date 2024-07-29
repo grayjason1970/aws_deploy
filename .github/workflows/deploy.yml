@@ -47,12 +47,6 @@ jobs:
   
     - name: Install SSH client
       run: sudo apt-get install -y openssh-client 
-
-    - name: Install SSM Agent
-      run: | 
-           sudo apt-get install -y amazon-ssm-agent
-           sudo systemctl start amazon-ssm-agent
-           sudo systemctl enable amazon-ssm-agent
   
     - name: Extract EC2 Instance ID
       id: extract_id
@@ -72,6 +66,31 @@ jobs:
 
     - name: Install AWS CLI
       run: sudo apt-get install -y awscli
+
+    - name: Ensure SSM Agent is Running
+      run: |
+        # Polling for the SSM agent to be running on the EC2 instance
+        instance_id="$INSTANCE_ID"  # Replace with your instance ID
+        max_retries=30
+        retry_count=0
+        ssm_status=""
+
+        while [ "$retry_count" -lt "$max_retries" ]; do
+          ssm_status=$(aws ec2 describe-instance-status --instance-ids "$instance_id" --query "InstanceStatuses[0].InstanceStatus.Status" --output text)
+          if [ "$ssm_status" == "ok" ]; then
+            echo "SSM Agent is running."
+            break
+          else
+            echo "SSM Agent is not running. Retrying..."
+            sleep 20
+            ((retry_count++))
+          fi
+        done
+
+        if [ "$retry_count" -ge "$max_retries" ]; then
+          echo "SSM Agent did not start in time. Exiting."
+          exit 1
+        fi
 
     - name: Send SSH Key to EC2
       env:

@@ -9,18 +9,6 @@ resource "aws_instance" "flask_app" {
 
   user_data = <<-EOF
               #!/bin/bash
-              # Install SSM Agent if not already installed
-              if ! rpm -q amazon-ssm-agent; then
-                yum install -y amazon-ssm-agent
-              fi
-              systemctl start amazon-ssm-agent
-              systemctl enable amazon-ssm-agent
-
-              # Wait for SSM Agent to be ready
-              sleep 30
-
-               # Execute setup.sh last
-               #!/bin/bash
                 sudo yum update -y
                 sudo yum install -y gcc
                 sudo yum install -y python3
