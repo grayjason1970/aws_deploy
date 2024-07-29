@@ -5,8 +5,7 @@ provider "aws" {
 resource "aws_instance" "flask_app" {
   ami           = var.ami_id
   instance_type = var.instance_type
-  # key_name      = var.key_name
-  key_name      = aws_key_pair.generated_key.key_name
+  key_name      = var.key_name
 
   user_data = <<-EOF
               #!/bin/bash
@@ -50,11 +49,6 @@ resource "aws_instance" "flask_app" {
     network_interface_id = aws_network_interface.flask_app.id
     device_index         = 0
   }
-}
-
-resource "aws_key_pair" "generated_key" {
-  key_name   = "generated-key"
-  private_key = var.private_key
 }
 
 resource "aws_network_interface" "flask_app" {

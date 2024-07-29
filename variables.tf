@@ -28,6 +28,6 @@ variable "ami_id" {
   default     = "ami-0648742c7600c103f"
 }
 
-variable "private_key" {
+variable "ssh_key" {
   description = "Private SSH key"
 }
