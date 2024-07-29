@@ -68,6 +68,8 @@ jobs:
       run: sudo apt-get install -y awscli
 
     - name: Ensure SSM Agent is Running
+      env:
+       INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
       run: |
         # Polling for the SSM agent to be running on the EC2 instance
         instance_id="$INSTANCE_ID"  # Replace with your instance ID
