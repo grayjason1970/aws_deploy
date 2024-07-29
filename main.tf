@@ -5,12 +5,22 @@ provider "aws" {
 resource "aws_instance" "flask_app" {
   ami           = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_name
-  private_key   = var.private_key
+  # key_name      = var.key_name
+  key_name      = aws_key_pair.generated_key.key_name
 
   user_data = <<-EOF
               #!/bin/bash
-                echo '${var.private_key}' >> /home/ec2-user/.ssh/id_rsa
+              # Add keys to gain access to github
+               echo "${ssh_key}" > /home/ec2-user/.ssh/id_rsa
+               chmod 600 /home/ec2-user/.ssh/id_rsa
+               chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa
+               echo "Host github.com" >> /home/ec2-user/.ssh/config
+               echo "  StrictHostKeyChecking no" >> /home/ec2-user/.ssh/config
+               echo "  IdentityFile /home/ec2-user/.ssh/id_rsa" >> /home/ec2-user/.ssh/config
+               chown ec2-user:ec2-user /home/ec2-user/.ssh/config
+               chmod 600 /home/ec2-user/.ssh/config
+
+              # Continue with the rest of installation
                 sudo yum update -y
                 sudo yum install -y gcc
                 sudo yum install -y python3
@@ -42,6 +52,11 @@ resource "aws_instance" "flask_app" {
   }
 }
 
+resource "aws_key_pair" "generated_key" {
+  key_name   = "generated-key"
+  private_key = var.private_key
+}
+
 resource "aws_network_interface" "flask_app" {
   subnet_id       = var.subnet_id
 
@@ -56,8 +71,4 @@ output "ec2_instance_public_ip" {
 
 output "ec2_instance_id" {
   value = aws_instance.flask_app.id
-}
-
-variable "private_key" {
-  description = "Private SSH key"
 }

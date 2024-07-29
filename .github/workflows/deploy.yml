@@ -28,23 +28,25 @@ jobs:
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get update && sudo apt-get install terraform
 
-    - name: Generate SSH Key
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          SSH_PUBLIC_KEY: ${{ secrets.DEPLOY_KEY_PUBLIC }}
-      run: |
-          echo "$SSH_PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          echo "$SSH_PUBLIC_KEY" > public_key
-          chmod 600 public_key
-          echo "::set-output name=private_key::$(cat private_key)"
-          echo "::set-output name=public_key::$(cat public_key.pub)"
+    #- name: Generate SSH Key
+    #  env:
+    #      SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+    #      SSH_PUBLIC_KEY: ${{ secrets.DEPLOY_KEY_PUBLIC }}
+    #  run: |
+    #      echo "$SSH_PRIVATE_KEY" > private_key
+    #      chmod 600 private_key
+    #      echo "$SSH_PUBLIC_KEY" > public_key
+    #      chmod 600 public_key
+    #      echo "::set-output name=private_key::$(cat private_key)"
+    #      echo "::set-output name=public_key::$(cat public_key.pub)"
 
     - name: Terraform Init
       run: terraform init
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var "private_key=${{ steps.generate_ssh.outputs.private_key }}"
+      env:
+        SSH_KEY: ${{ secrets.DEPLOY_KEY }}
+      run: terraform apply -auto-approve -var "ssh_key=${SSH_KEY}"
     
     - name: Wait for EC2 Instance to be ready
       run: |

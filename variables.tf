@@ -27,3 +27,7 @@ variable "ami_id" {
   description = "The AMI ID"
   default     = "ami-0648742c7600c103f"
 }
+
+variable "private_key" {
+  description = "Private SSH key"
+}
