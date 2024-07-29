@@ -30,4 +30,5 @@ variable "ami_id" {
 
 variable "ssh_key" {
   description = "Private SSH key"
+  type        = string
 }
