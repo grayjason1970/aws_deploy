@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create EC2 Deployment Configuration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Create EC2 Deployment Configuration</h1>
+    <form method="post">
+        <label for="image_id">Select Image:</label>
+        <select name="image_id" required>
+            {% for image in images %}
+                <option value="{{ image[1] }}">{{ image[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="instance_type">Select Instance Type:</label>
+        <select name="instance_type" required>
+            {% for itype in instance_types %}
+                <option value="{{ itype[1] }}">{{ itype[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="memory_size">Select Memory Size:</label>
+        <select name="memory_size" required>
+            {% for memory in memory_sizes %}
+                <option value="{{ memory[1] }}">{{ memory[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="disk_size">Select Disk Size:</label>
+        <select name="disk_size" required>
+            {% for disk in disk_sizes %}
+                <option value="{{ disk[1] }}">{{ disk[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="subnet_id">Select Subnet:</label>
+        <select name="subnet_id" required>
+            {% for subnet in subnets %}
+                <option value="{{ subnet[1] }}">{{ subnet[1] }}</option>
+            {% endfor %}
+        </select><br>
+
+        <label for="instance_count">Number of Instances:</label>
+        <input type="number" name="instance_count" min="1" required><br>
+
+        <input type="submit" value="Deploy">
+    </form>
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>
