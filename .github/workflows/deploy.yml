@@ -73,12 +73,13 @@ jobs:
       run: |
         # Polling for the SSM agent to be running on the EC2 instance
         instance_id="$INSTANCE_ID"  # Replace with your instance ID
+        echo "$INSTANCE_ID"
         max_retries=30
         retry_count=0
         ssm_status=""
 
         while [ "$retry_count" -lt "$max_retries" ]; do
-          ssm_status=$(aws ec2 describe-instance-status --instance-ids "$instance_id" --query "InstanceStatuses[0].InstanceStatus.Status" --output text)
+          ssm_status=$(aws ec2 describe-instance-status --instance-ids "$INSTANCE_ID" --query "InstanceStatuses[0].InstanceStatus.Status" --output text)
           if [ "$ssm_status" == "ok" ]; then
             echo "SSM Agent is running."
             break
