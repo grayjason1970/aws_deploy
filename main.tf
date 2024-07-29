@@ -6,12 +6,11 @@ resource "aws_instance" "flask_app" {
   ami           = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
-  ssh_key       = var.ssh_key
 
   user_data = <<-EOF
               #!/bin/bash
               # Add keys to gain access to github
-               echo "${ssh_key}" > /home/ec2-user/.ssh/id_rsa
+               echo "${var.ssh_key}" > /home/ec2-user/.ssh/id_rsa
                chmod 600 /home/ec2-user/.ssh/id_rsa
                chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa
                echo "Host github.com" >> /home/ec2-user/.ssh/config
