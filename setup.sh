@@ -16,6 +16,8 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 # Clone the GitHub repo and run the Flask app
 ssh-keyscan github.com >> /home/ec2-user/.ssh/known_hosts
+echo "Cloning App"
 git clone git@github.com:grayjason1970/aws_deploy.git /home/ec2-user/app
+echo "Finished cloning App"
 cd /home/ec2-user/app
 docker-compose up -d
