@@ -6,6 +6,7 @@ resource "aws_instance" "flask_app" {
   ami           = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
+  ssh_key       = var.ssh_key
 
   user_data = <<-EOF
               #!/bin/bash
