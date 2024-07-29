@@ -58,6 +58,6 @@ output "ec2_instance_id" {
   value = aws_instance.flask_app.id
 }
 
-variable "public_key" {
-  description = "Public SSH key"
+variable "private_key" {
+  description = "Private SSH key"
 }
