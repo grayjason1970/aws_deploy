@@ -6,9 +6,11 @@ resource "aws_instance" "flask_app" {
   ami           = var.ami_id
   instance_type = var.instance_type
   key_name      = var.key_name
+  private_key   = var.private_key
 
   user_data = <<-EOF
               #!/bin/bash
+                echo '${var.private_key}' >> /home/ec2-user/.ssh/id_rsa
                 sudo yum update -y
                 sudo yum install -y gcc
                 sudo yum install -y python3
@@ -54,4 +56,8 @@ output "ec2_instance_public_ip" {
 
 output "ec2_instance_id" {
   value = aws_instance.flask_app.id
+}
+
+variable "public_key" {
+  description = "Public SSH key"
 }

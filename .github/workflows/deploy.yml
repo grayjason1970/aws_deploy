@@ -28,16 +28,28 @@ jobs:
         sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
         sudo apt-get update && sudo apt-get install terraform
 
+    - name: Generate SSH Key
+      env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+          SSH_PUBLIC_KEY: ${{ secrets.DEPLOY_KEY_PUBLIC }}
+      run: |
+          echo "$SSH_PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          echo "$SSH_PUBLIC_KEY" > public_key
+          chmod 600 public_key
+          echo "::set-output name=private_key::$(cat private_key)"
+          echo "::set-output name=public_key::$(cat public_key.pub)"
+
     - name: Terraform Init
       run: terraform init
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var "private_key=${{ steps.generate_ssh.outputs.private_key }}"
     
     - name: Wait for EC2 Instance to be ready
       run: |
         echo "Waiting for EC2 instance to be ready..."
-        sleep 60
+        sleep 30
     
     - name: Extract EC2 Instance Public IP
       id: extract_ip
@@ -54,41 +66,31 @@ jobs:
         instance_id=$(terraform output -raw ec2_instance_id)
         echo "::set-output name=INSTANCE_ID::$instance_id"
 
-    - name: Generate SSH Key
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-        SSH_PUBLIC_KEY: ${{ secrets.DEPLOY_KEY_PUBLIC }}
-      run: |
-        echo "$SSH_PRIVATE_KEY" > ssh_private_key
-        chmod 600 ssh_private_key
-        echo "$SSH_PUBLIC_KEY" > ssh_public_key
-        chmod 600 ssh_public_key
+    #- name: Install AWS CLI
+    #  run: sudo apt-get install -y awscli
 
-    - name: Install AWS CLI
-      run: sudo apt-get install -y awscli
+    #- name: Install SSM Agent on Ubuntu
+    #  run: | 
+    #   sudo snap install amazon-ssm-agent --classic
+    #   sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
 
-    - name: Install SSM Agent on Ubuntu
-      run: | 
-       sudo snap install amazon-ssm-agent --classic
-       sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
+    #- name: Ensure SSM Agent is Running
+    #  env:
+    #   INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
+    #  run: | 
+    #     aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
 
-    - name: Ensure SSM Agent is Running
-      env:
-       INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
-      run: | 
-         aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
-
-    - name: Send SSH Key to EC2
-      env:
-        INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
-      run: |
-        aws ssm send-command \
-          --document-name "AWS-RunShellScript" \
-          --targets "Key=instanceids,Values=$INSTANCE_ID" \
-          --comment "Send SSH key to EC2 instance" \
-          --parameters 'commands=["mkdir -p /home/ec2-user/.ssh", "echo \"$(<ssh_private_key)\" > /home/ec2-user/.ssh/id_rsa", "echo \"$(<ssh_public_key)\" > /home/ec2-user/.ssh/id_rsa.pub", "chmod 600 /home/ec2-user/.ssh/id_rsa", "chmod 644 /home/ec2-user/.ssh/id_rsa.pub", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa.pub"]' \
-          --timeout-seconds 60 \
-          --max-concurrency "50" \
-          --max-errors "0"
+    #- name: Send SSH Key to EC2
+    #  env:
+    #    INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
+    #  run: |
+    #    aws ssm send-command \
+    #      --document-name "AWS-RunShellScript" \
+    #      --targets "Key=instanceids,Values=$INSTANCE_ID" \
+    #      --comment "Send SSH key to EC2 instance" \
+    #      --parameters 'commands=["mkdir -p /home/ec2-user/.ssh", "echo \"$(<ssh_private_key)\" > /home/ec2-user/.ssh/id_rsa", "echo \"$(<ssh_public_key)\" > /home/ec2-user/.ssh/id_rsa.pub", "chmod 600 /home/ec2-user/.ssh/id_rsa", "chmod 644 /home/ec2-user/.ssh/id_rsa.pub", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa", "chown ec2-user:ec2-user /home/ec2-user/.ssh/id_rsa.pub"]' \
+    #      --timeout-seconds 60 \
+    #      --max-concurrency "50" \
+    #      --max-errors "0"
       
         
