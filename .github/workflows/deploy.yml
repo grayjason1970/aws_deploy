@@ -73,34 +73,10 @@ jobs:
        sudo systemctl start snap.amazon-ssm-agent.amazon-ssm-agent
 
     - name: Ensure SSM Agent is Running
-      #env:
-      # INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
-      run: sudo systemctl status snap.amazon-ssm-agent.amazon-ssm-agent
-      #run: |
-      #  # Polling for the SSM agent to be running on the EC2 instance
-      #  instance_id="$INSTANCE_ID"  # Replace with your instance ID
-      #  echo "$INSTANCE_ID"
-      #  max_retries=30
-      #  retry_count=0
-      #  ssm_status=""
-
-      #  while [ "$retry_count" -lt "$max_retries" ]; do
-      #    ssm_status=$(aws ec2 describe-instance-status --instance-ids "$INSTANCE_ID" --query "InstanceStatuses[0].InstanceStatus.Status" --output text)
-      #    if [ "$ssm_status" == "ok" ]; then
-      #      echo "$INSANCE_ID"
-      #      echo "SSM Agent is running."
-      #      break
-      #    else
-      #      echo "SSM Agent is not running. Retrying..."
-      #      sleep 60
-      #      ((retry_count++))
-      #    fi
-      #  done
-
-      #  if [ "$retry_count" -ge "$max_retries" ]; then
-      #    echo "SSM Agent did not start in time. Exiting."
-      #    exit 1
-      #  fi
+      env:
+       INSTANCE_ID: ${{ steps.extract_id.outputs.INSTANCE_ID }}
+      run: | 
+         aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
 
     - name: Send SSH Key to EC2
       env:
