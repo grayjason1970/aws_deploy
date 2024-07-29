@@ -4,6 +4,7 @@ import boto3
 from config import Config
 
 app = Flask(__name__)
+
 app.config.from_object(Config)
 
 def get_db_connection():
@@ -37,13 +38,17 @@ def config_form():
                 InstanceType=instance_type,
                 MinCount=1,
                 MaxCount=1,
-                SubnetId=subnet_id
+                SubnetId=subnet_id,
+                KeyName=app.config['KEYNAME']
             )
         
         return redirect(url_for('deploy_results', count=instance_count))
 
     conn = get_db_connection()
     cursor = conn.cursor()
+    cursor.execute("SELECT key_name FROM key_pairs WHERE id = %s", (key_pair_id,))
+    key_pair = cursor.fetchone()
+    key_name = key_pair[0]
     
     cursor.execute("SELECT * FROM images")
     images = cursor.fetchall()
@@ -57,8 +62,11 @@ def config_form():
     cursor.execute("SELECT * FROM disk_sizes")
     disk_sizes = cursor.fetchall()
 
-    cursor.execute("SELECT * FROM subnet_availability_zones")
+    cursor.execute("SELECT * FROM subnet_id")
     subnets = cursor.fetchall()
+
+    cursor.execute("SELECT * FROM key_pairs")
+    key_pairs = cursor.fetchall()
     
     conn.close()
 
@@ -67,7 +75,8 @@ def config_form():
                            instance_types=instance_types,
                            memory_sizes=memory_sizes,
                            disk_sizes=disk_sizes,
-                           subnets=subnets)
+                           subnets=subnets,
+                           key_pairs=key_pairs)
 
 @app.route('/deploy_results')
 def deploy_results():
@@ -75,4 +84,5 @@ def deploy_results():
     return render_template('deploy_results.html', count=count)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)

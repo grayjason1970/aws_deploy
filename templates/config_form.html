@@ -42,6 +42,13 @@
             {% endfor %}
         </select><br>
 
+        <label for="key_pair_id">Key Pair:</label>
+        <select name="key_pair_id">
+            {% for key_pair in key_pairs %}
+            <option value="{{ key_pair[0] }}">{{ key_pair[1] }}</option>
+            {% endfor %}
+        </select><br>
+
         <label for="instance_count">Number of Instances:</label>
         <input type="number" name="instance_count" min="1" required><br>
 

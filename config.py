@@ -6,3 +6,4 @@ class Config:
     MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD', 'password')
     MYSQL_DB = os.getenv('MYSQL_DB', 'project1')
     AWS_REGION = 'us-west-2'
+    KEYNAME = 'KEYNAME'
