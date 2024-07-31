@@ -1,11 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>EC2 Deployment</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to EC2 Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Welcome to EC2 Deployment Tool</h1>
-    <a href="{{ url_for('config_form') }}">Create EC2 Deployment Configuration</a>
+    <div class="container">
+        <h1>Welcome to EC2 Management</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('deploy') }}">Deploy</a></li>
+                <li><a href="{{ url_for('manage_instances') }}">Manage Instances</a></li>
+            </ul>
+        </nav>
+        
+        <section>
+            <h2>Application Overview</h2>
+            <p>
+                Welcome to the EC2 Management application, a web-based tool designed to streamline and manage your Amazon EC2 instances efficiently. With this application, you can:
+            </p>
+            <ul>
+                <li><strong>Deploy EC2 Instances:</strong> Easily configure and deploy new EC2 instances based on your specified parameters such as image ID, instance type, memory size, disk size, and subnet.</li>
+                <li><strong>Manage Existing Instances:</strong> View and manage your running EC2 instances. You can terminate instances directly from the management interface.</li>
+            </ul>
+            <p>
+                This application integrates with AWS services to provide real-time management capabilities, ensuring that you can handle your EC2 infrastructure with ease.
+            </p>
+            <p>
+                Use the navigation links to access the deployment configuration and instance management sections of the application.
+            </p>
+        </section>
+        
+        <footer>
+            <p>&copy; 2024 EC2 Management Application</p>
+        </footer>
+    </div>
 </body>
 </html>
+

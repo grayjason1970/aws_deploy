@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EC2 Deployment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>EC2 Deployment</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('deploy') }}">Deploy</a></li>
+                <li><a href="{{ url_for('manage_instances') }}">Manage Instances</a></li>
+            </ul>
+        </nav>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form method="post" action="{{ url_for('configure') }}">
+            <label for="image_id">Image ID:</label>
+            <select name="image_id" id="image_id">
+                {% for image in images %}
+                    <option value="{{ image[1] }}">{{ image[1] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="instance_type">Instance Type:</label>
+            <select name="instance_type" id="instance_type">
+                {% for instance_type in instance_types %}
+                    <option value="{{ instance_type[1] }}">{{ instance_type[1] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="memory_size">Memory Size:</label>
+            <select name="memory_size" id="memory_size">
+                {% for memory_size in memory_sizes %}
+                    <option value="{{ memory_size[1] }}">{{ memory_size[1] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="disk_size">Disk Size:</label>
+            <select name="disk_size" id="disk_size">
+                {% for disk_size in disk_sizes %}
+                    <option value="{{ disk_size[1] }}">{{ disk_size[1] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="subnet_id">Subnet ID:</label>
+            <select name="subnet_id" id="subnet_id">
+                {% for subnet in subnets %}
+                    <option value="{{ subnet[1] }}">{{ subnet[1] }}</option>
+                {% endfor %}
+            </select>
+            <br>
+
+            <label for="instance_count">Instance Count:</label>
+            <input type="number" name="instance_count" id="instance_count" value="1" min="1">
+            <br>
+
+            <input type="submit" value="Configure">
+        </form>
+    </div>
+</body>
+</html>
+
