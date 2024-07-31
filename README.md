@@ -17,13 +17,20 @@ my_flask_app/
 ├── app.py
 ├── config.py
 ├── requirements.txt
+├── variables.tf
+├── insert_key.py
+├── main.tf
+├── docker-compose.yml
+├── README.md
+├── setup.sh
 ├── static/
-│   └── css/
 │       └── styles.css
 ├── templates/
 │   ├── index.html
 │   ├── add_key_pair.html
-│   └── manage_instances.html
+│   ├── manage_instances.html
+│   ├── home.html
+│   └── deploy.html
 └── instance/
     └── config.py
 ```
@@ -34,9 +41,8 @@ my_flask_app/
 2. **MariaDB Database**: Ensure you have a MariaDB database set up to store configuration and instance details.
 3. **Python 3**: The application requires Python 3.8 or higher.
 
-I would also suggest using my other project (called woefully project1) to deploy the mysql server using terraform onto an EC2 instance.  It's not
-mandatory but it will save some steps later.  I used this as a CI/CD project with github workflows to trigger deployments automatically when
-new code was commited.  It also uses an S3 bucket to secure the terraform state file.
+Note: This project makes use of Github workflows and is setup to deploy a free tier AWS micro instance via terraform and then
+      checkout the code automatically whenever the master branch is updated.
 
 https://github.com/grayjason1970/project1
 
