@@ -257,4 +257,3 @@ Feel free to open issues or submit pull requests if you have suggestions or impr
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
